@@ -1,0 +1,16 @@
+/.metadata/
+
+# Environment variables - NEVER commit these!
+.env
+.env.local
+.env.*.local
+
+# Maven build output
+**/target/
+
+# IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
