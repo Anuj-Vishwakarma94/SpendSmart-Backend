@@ -120,13 +120,6 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
-        <!-- Spring Boot Admin Client -->
-        <dependency>
-            <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-client</artifactId>
-            <version>3.2.0</version>
-        </dependency>
-
         <!-- Spring Boot Actuator (required for Admin) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
