@@ -1,0 +1,79 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: subscription-service
+  datasource:
+    url: jdbc:mysql://mysql:3306/spendsmart_subscription?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  boot:
+    admin:
+      client:
+        url: http://admin-server:9090
+        username: ${ADMIN_USERNAME}
+        password: ${ADMIN_PASSWORD}
+        instance:
+          prefer-ip: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+        debug: true
+jwt:
+  secret: ${JWT_SECRET}
+payment:
+  service:
+    url: http://payment-service
+subscription:
+  plan:
+    monthly:
+      price: 199.00
+      currency: INR
+cors:
+  allowed-origins: http://localhost:5173
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+logging:
+  level:
+    com:
+      spendsmart: DEBUG
+app:
+  frontend:
+    url: http://localhost:5173
