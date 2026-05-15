@@ -1,0 +1,61 @@
+server:
+  port: 8086
+spring:
+  application:
+    name: analytics-service
+  datasource:
+    url: jdbc:mysql://mysql:3306/spendsmart_analytics?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  boot:
+    admin:
+      client:
+        url: http://admin-server:9090
+        username: ${ADMIN_USERNAME}
+        password: ${ADMIN_PASSWORD}
+        instance:
+          prefer-ip: true
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000
+cors:
+  allowed-origins: http://localhost:5173
+expense:
+  service:
+    url: http://expense-service:8082
+income:
+  service:
+    url: http://income-service:8083
+budget:
+  service:
+    url: http://budget-service:8085
+logging:
+  level:
+    com:
+      spendsmart: DEBUG
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+subscription:
+  service:
+    url: http://subscription-service:8090
