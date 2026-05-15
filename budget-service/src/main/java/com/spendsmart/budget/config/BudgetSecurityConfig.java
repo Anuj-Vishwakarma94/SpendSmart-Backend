@@ -43,7 +43,7 @@ public class BudgetSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
             .cors(c -> c.configurationSource(cors()))
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(a -> a.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll().anyRequest().authenticated())
+            .authorizeHttpRequests(a -> a.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll().requestMatchers("/actuator/**").permitAll().anyRequest().authenticated())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(premiumCheckFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
