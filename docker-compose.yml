@@ -1,0 +1,374 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Networks
+# ─────────────────────────────────────────────────────────────────────────────
+networks:
+  spendsmart-net:
+    driver: bridge
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Services
+# ─────────────────────────────────────────────────────────────────────────────
+services:
+
+  # ── Eureka Server ──────────────────────────────────────────────────────────
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    container_name: spendsmart-eureka
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    environment:
+      EUREKA_INSTANCE_HOSTNAME: eureka-server
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms512m -Xmx512m"
+    networks:
+      - spendsmart-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8761/actuator/health | grep -q UP || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 240s
+
+  # ── RabbitMQ ───────────────────────────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: spendsmart-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    networks:
+      - spendsmart-net
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+  # ── Admin Server ───────────────────────────────────────────────────────────
+  admin-server:
+    build:
+      context: ./admin-server
+      dockerfile: Dockerfile
+    container_name: spendsmart-admin
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    environment:
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms512m -Xmx512m"
+      SPRING_BOOT_ADMIN_DISCOVERY_ENABLED: "true"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── API Gateway ────────────────────────────────────────────────────────────
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: spendsmart-gateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Auth Service ───────────────────────────────────────────────────────────
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-auth
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_auth?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Expense Service ────────────────────────────────────────────────────────
+  expense-service:
+    build:
+      context: ./expense-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-expense
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_expense?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Income Service ─────────────────────────────────────────────────────────
+  income-service:
+    build:
+      context: ./income-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-income
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_income?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Category Service ───────────────────────────────────────────────────────
+  category-service:
+    build:
+      context: ./category-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-category
+    restart: unless-stopped
+    ports:
+      - "8084:8084"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_category?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Budget Service ─────────────────────────────────────────────────────────
+  budget-service:
+    build:
+      context: ./budget-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-budget
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_budget?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Analytics Service ──────────────────────────────────────────────────────
+  analytics-service:
+    build:
+      context: ./analytics-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-analytics
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_analytics?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Recurring Service ──────────────────────────────────────────────────────
+  recurring-service:
+    build:
+      context: ./recurring-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-recurring
+    restart: unless-stopped
+    ports:
+      - "8087:8087"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_recurring?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Notification Service ───────────────────────────────────────────────────
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-notification
+    restart: unless-stopped
+    ports:
+      - "8088:8088"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_notification?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Payment Service ────────────────────────────────────────────────────────
+  payment-service:
+    build:
+      context: ./payment-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-payment
+    restart: unless-stopped
+    ports:
+      - "8089:8089"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_payment?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
+
+  # ── Subscription Service ───────────────────────────────────────────────────
+  subscription-service:
+    build:
+      context: ./subscription-service
+      dockerfile: Dockerfile
+    container_name: spendsmart-subscription
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DOTENV_IGNORE_MISSING: "true"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
+      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_subscription?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - spendsmart-net
