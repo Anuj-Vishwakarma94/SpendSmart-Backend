@@ -5,10 +5,19 @@ spring:
     name: notification-service
   rabbitmq:
     addresses: ${RABBITMQ_ADDRESSES:amqp://rabbitmq:5672}
+    listener:
+      simple:
+        missing-queues-fatal: false
+        retry:
+          enabled: true
+          initial-interval: 5000ms
+          max-attempts: 5
+          multiplier: 2
+          max-interval: 30000ms
   datasource:
-    url: ${DB_URL:jdbc:mysql://mysql:3306/spendsmart_notification?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:${DB_URL:jdbc:mysql://mysql:3306/spendsmart_notification?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}}
+    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:root}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:PassWord}}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
