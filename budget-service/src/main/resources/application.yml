@@ -4,10 +4,9 @@ spring:
   application:
     name: budget-service
   rabbitmq:
-    host: rabbitmq
-    port: 5672
-    username: ${RABBITMQ_USERNAME}
-    password: ${RABBITMQ_PASSWORD}
+    addresses: ${RABBITMQ_ADDRESSES:amqp://rabbitmq:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
   datasource:
     url: jdbc:mysql://mysql:3306/spendsmart_budget?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME}
@@ -23,7 +22,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://admin-server:9090
+        url: ${ADMIN_SERVER_URL:http://admin-server:9090}
         username: ${ADMIN_USERNAME}
         password: ${ADMIN_PASSWORD}
         instance:
@@ -32,7 +31,7 @@ jwt:
   secret: ${JWT_SECRET}
   expiration: 86400000
 cors:
-  allowed-origins: http://localhost:5173
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173}
 logging:
   level:
     com:

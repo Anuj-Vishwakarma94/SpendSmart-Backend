@@ -19,7 +19,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://admin-server:9090
+        url: ${ADMIN_SERVER_URL:http://admin-server:9090}
         username: ${ADMIN_USERNAME}
         password: ${ADMIN_PASSWORD}
         instance:
@@ -38,7 +38,7 @@ auth:
   service:
     url: http://auth-service:8081
 cors:
-  allowed-origins: http://localhost:5173
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173}
 eureka:
   client:
     register-with-eureka: true
