@@ -5,8 +5,6 @@ spring:
     name: notification-service
   rabbitmq:
     addresses: ${RABBITMQ_ADDRESSES:amqp://rabbitmq:5672}
-    username: ${RABBITMQ_USERNAME:guest}
-    password: ${RABBITMQ_PASSWORD:guest}
   datasource:
     url: jdbc:mysql://mysql:3306/spendsmart_notification?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME}
