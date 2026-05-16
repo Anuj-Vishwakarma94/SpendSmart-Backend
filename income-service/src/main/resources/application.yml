@@ -43,7 +43,11 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
   instance:
-    prefer-ip-address: true
+    prefer-ip-address: ${EUREKA_PREFER_IP:true}
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:income-service}
+    nonSecurePort: 8083
+    nonSecurePortEnabled: true
+    securePortEnabled: false
 management:
   endpoints:
     web:
