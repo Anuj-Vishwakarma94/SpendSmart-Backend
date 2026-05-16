@@ -4,7 +4,7 @@ spring:
   application:
     name: income-service
   datasource:
-    url: jdbc:mysql://mysql:3306/spendsmart_income?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    url: ${DB_URL:jdbc:mysql://mysql:3306/spendsmart_income?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
