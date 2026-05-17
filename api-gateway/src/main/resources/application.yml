@@ -7,7 +7,7 @@ spring:
   boot:
     admin:
       client:
-        url: ${ADMIN_SERVER_URL:http://admin-server:9090}
+        url: http://admin-server:9090
         username: ${ADMIN_USERNAME}
         password: ${ADMIN_PASSWORD}
         instance:
@@ -17,8 +17,10 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOriginPatterns:
-              - "${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173}"
+            allowedOrigins:
+              - "http://localhost:5173"
+              - "http://localhost:5174"
+              - "http://127.0.0.1:5173"
             allowedMethods:
               - GET
               - POST
@@ -78,12 +80,7 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
   instance:
-    prefer-ip-address: ${EUREKA_PREFER_IP:true}
-    hostname: ${EUREKA_INSTANCE_HOSTNAME:api-gateway}
-    nonSecurePort: 8080
-    nonSecurePortEnabled: ${EUREKA_NON_SECURE_PORT_ENABLED:true}
-    securePortEnabled: ${EUREKA_SECURE_PORT_ENABLED:false}
-    securePort: ${EUREKA_SECURE_PORT:443}
+    prefer-ip-address: true
 
 management:
   endpoints:
