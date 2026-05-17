@@ -4,9 +4,9 @@ spring:
   application:
     name: subscription-service
   datasource:
-    url: ${SPRING_DATASOURCE_URL:${DB_URL:jdbc:mysql://mysql:3306/spendsmart_subscription?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}}
-    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:root}}
-    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:PassWord}}
+    url: jdbc:mysql://mysql:3306/spendsmart_subscription?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -19,7 +19,7 @@ spring:
   boot:
     admin:
       client:
-        url: ${ADMIN_SERVER_URL:http://admin-server:9090}
+        url: http://admin-server:9090
         username: ${ADMIN_USERNAME}
         password: ${ADMIN_PASSWORD}
         instance:
@@ -53,7 +53,7 @@ subscription:
       price: 199.00
       currency: INR
 cors:
-  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173}
+  allowed-origins: http://localhost:5173
 eureka:
   client:
     register-with-eureka: true
@@ -61,12 +61,7 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
   instance:
-    prefer-ip-address: ${EUREKA_PREFER_IP:true}
-    hostname: ${EUREKA_INSTANCE_HOSTNAME:subscription-service}
-    nonSecurePort: 8090
-    nonSecurePortEnabled: ${EUREKA_NON_SECURE_PORT_ENABLED:true}
-    securePortEnabled: ${EUREKA_SECURE_PORT_ENABLED:false}
-    securePort: ${EUREKA_SECURE_PORT:443}
+    prefer-ip-address: true
 management:
   endpoints:
     web:
@@ -81,4 +76,4 @@ logging:
       spendsmart: DEBUG
 app:
   frontend:
-    url: ${FRONTEND_URL:http://localhost:5173}
+    url: http://localhost:5173
