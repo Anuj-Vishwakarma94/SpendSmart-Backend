@@ -46,8 +46,9 @@ eureka:
     prefer-ip-address: ${EUREKA_PREFER_IP:true}
     hostname: ${EUREKA_INSTANCE_HOSTNAME:income-service}
     nonSecurePort: 8083
-    nonSecurePortEnabled: true
-    securePortEnabled: false
+    nonSecurePortEnabled: ${EUREKA_NON_SECURE_PORT_ENABLED:true}
+    securePortEnabled: ${EUREKA_SECURE_PORT_ENABLED:false}
+    securePort: ${EUREKA_SECURE_PORT:443}
 management:
   endpoints:
     web:
