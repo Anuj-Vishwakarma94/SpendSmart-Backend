@@ -52,7 +52,7 @@ public class RecurringSecurityConfig {
             "https://spendsmartpro.duckdns.org"
         ));
         c.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        c.setAllowedHeaders(List.of("*")); c.setAllowCredentials(true);
+        c.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "X-Requested-With", "Origin")); c.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource s = new UrlBasedCorsConfigurationSource();
         s.registerCorsConfiguration("/**", c); return s;
     }
