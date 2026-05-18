@@ -20,6 +20,16 @@ services:
     ports:
       - "8761:8761"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       EUREKA_INSTANCE_HOSTNAME: eureka-server
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
@@ -42,6 +52,16 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     networks:
@@ -62,6 +82,16 @@ services:
     ports:
       - "9090:9090"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
@@ -84,12 +114,22 @@ services:
     ports:
       - "8080:8080"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -106,6 +146,16 @@ services:
     ports:
       - "8081:8081"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -118,7 +168,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_auth?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
@@ -136,6 +186,16 @@ services:
     ports:
       - "8082:8082"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -144,7 +204,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_expense?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
@@ -162,6 +222,16 @@ services:
     ports:
       - "8083:8083"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -170,7 +240,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_income?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
@@ -188,6 +258,16 @@ services:
     ports:
       - "8084:8084"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -196,7 +276,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_category?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
@@ -214,6 +294,16 @@ services:
     ports:
       - "8085:8085"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -224,7 +314,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_budget?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
@@ -244,6 +334,16 @@ services:
     ports:
       - "8086:8086"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -252,7 +352,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_analytics?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
@@ -270,6 +370,16 @@ services:
     ports:
       - "8087:8087"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -278,7 +388,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_recurring?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
@@ -296,6 +406,16 @@ services:
     ports:
       - "8088:8088"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -306,7 +426,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_notification?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
@@ -326,6 +446,16 @@ services:
     ports:
       - "8089:8089"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -337,7 +467,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_payment?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
@@ -355,6 +485,16 @@ services:
     ports:
       - "8090:8090"
     environment:
+      AUTH_SERVICE_URL: http://auth-service:8081
+      EXPENSE_SERVICE_URL: http://expense-service:8082
+      INCOME_SERVICE_URL: http://income-service:8083
+      CATEGORY_SERVICE_URL: http://category-service:8084
+      BUDGET_SERVICE_URL: http://budget-service:8085
+      ANALYTICS_SERVICE_URL: http://analytics-service:8086
+      RECURRING_SERVICE_URL: http://recurring-service:8087
+      NOTIFICATION_SERVICE_URL: http://notification-service:8088
+      PAYMENT_SERVICE_URL: http://payment-service:8089
+      SUBSCRIPTION_SERVICE_URL: http://subscription-service:8090
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -365,7 +505,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_DOTENV_IGNORE_MISSING: "true"
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
-      SPRING_BOOT_ADMIN_CLIENT_URL: http://admin-server:9090
+      SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_subscription?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     depends_on:
       eureka-server:
