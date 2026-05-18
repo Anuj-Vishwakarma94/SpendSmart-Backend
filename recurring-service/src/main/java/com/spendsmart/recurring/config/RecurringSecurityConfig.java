@@ -67,7 +67,14 @@ public class RecurringSecurityConfig {
                     Claims c = Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(h.substring(7)).getBody();
                     if (c.getExpiration().after(new Date())) {
                         var auth = new UsernamePasswordAuthenticationToken(c.getSubject(), null, List.of(new SimpleGrantedAuthority("ROLE_" + c.get("role", String.class))));
-                        auth.setDetails(c.get("userId", Long.class));
+                        Object userIdRaw = c.get("userId");
+                        Long userId = null;
+                        if (userIdRaw instanceof Number) {
+                            userId = ((Number) userIdRaw).longValue();
+                        } else if (userIdRaw != null) {
+                            userId = Long.parseLong(userIdRaw.toString());
+                        }
+                        auth.setDetails(userId);
                         SecurityContextHolder.getContext().setAuthentication(auth);
                     }
                 } catch (JwtException ignored) {}

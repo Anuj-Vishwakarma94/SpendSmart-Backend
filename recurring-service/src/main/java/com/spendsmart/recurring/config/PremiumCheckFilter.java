@@ -67,7 +67,13 @@ public class PremiumCheckFilter extends OncePerRequestFilter {
                     .setSigningKey(getKey()).build()
                     .parseClaimsJws(token).getBody();
 
-            Long userId = claims.get("userId", Long.class);
+            Object userIdRaw = claims.get("userId");
+            Long userId = null;
+            if (userIdRaw instanceof Number) {
+                userId = ((Number) userIdRaw).longValue();
+            } else if (userIdRaw != null) {
+                userId = Long.parseLong(userIdRaw.toString());
+            }
             boolean isPremium = checkPremiumStatus(userId, header);
 
             if (!isPremium) {
