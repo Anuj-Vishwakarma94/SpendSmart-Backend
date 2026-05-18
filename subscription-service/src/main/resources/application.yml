@@ -19,7 +19,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://admin-server:9090
+        url: ${ADMIN_SERVER_URL:http://localhost:9090}
         username: ${ADMIN_USERNAME}
         password: ${ADMIN_PASSWORD}
         instance:
@@ -46,7 +46,7 @@ jwt:
   secret: ${JWT_SECRET}
 payment:
   service:
-    url: http://payment-service
+    url: ${PAYMENT_SERVICE_URL:http://localhost:8089}
 subscription:
   plan:
     monthly:
