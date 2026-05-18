@@ -94,7 +94,13 @@ public class IncomeSecurityConfig {
                         .parseClaimsJws(token).getBody();
 
                 if (claims.getExpiration().after(new Date())) {
-                    Long userId = claims.get("userId", Long.class);
+                    Object userIdRaw = claims.get("userId");
+                    Long userId = null;
+                    if (userIdRaw instanceof Number) {
+                        userId = ((Number) userIdRaw).longValue();
+                    } else if (userIdRaw != null) {
+                        userId = Long.parseLong(userIdRaw.toString());
+                    }
                     String role  = claims.get("role", String.class);
                     String email = claims.getSubject();
 
