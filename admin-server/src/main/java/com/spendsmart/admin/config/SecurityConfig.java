@@ -29,7 +29,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(adminServer.path("/assets/**")).permitAll()
                 .requestMatchers(adminServer.path("/login")).permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/actuator/**").permitAll().anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage(adminServer.path("/login"))
