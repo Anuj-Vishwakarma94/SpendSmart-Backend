@@ -29,7 +29,11 @@ spring:
               - DELETE
               - OPTIONS
               - PATCH
-            allowedHeaders: "*"
+            allowedHeaders:
+              - "*"
+              - "Authorization"
+              - "Content-Type"
+              - "Accept"
             allowCredentials: true
             maxAge: 3600
       discovery:
