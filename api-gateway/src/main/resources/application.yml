@@ -30,16 +30,16 @@ spring:
               - OPTIONS
               - PATCH
             allowedHeaders:
-              - "*"
               - "Authorization"
               - "Content-Type"
               - "Accept"
+              - "X-Requested-With"
+              - "Origin"
             allowCredentials: true
             maxAge: 3600
       discovery:
         locator:
-          enabled: true
-          lower-case-service-id: true
+          enabled: false
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
       routes:
@@ -79,6 +79,10 @@ spring:
           uri: lb://subscription-service
           predicates:
             - Path=/api/subscription/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/payments/**
 
 eureka:
   client:
