@@ -21,14 +21,17 @@ spring:
               - "http://localhost:5173"
               - "http://localhost:5174"
               - "http://127.0.0.1:5173"
+              - "https://spendsmartpro.duckdns.org"
             allowedMethods:
               - GET
               - POST
               - PUT
               - DELETE
               - OPTIONS
+              - PATCH
             allowedHeaders: "*"
             allowCredentials: true
+            maxAge: 3600
       discovery:
         locator:
           enabled: true
