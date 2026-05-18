@@ -17,7 +17,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://admin-server:9090
+        url: ${ADMIN_SERVER_URL:http://localhost:9090}
         username: ${ADMIN_USERNAME}
         password: ${ADMIN_PASSWORD}
         instance:
@@ -29,13 +29,13 @@ cors:
   allowed-origins: http://localhost:5173
 expense:
   service:
-    url: http://expense-service:8082
+    url: ${EXPENSE_SERVICE_URL:http://localhost:8082}
 income:
   service:
-    url: http://income-service:8083
+    url: ${INCOME_SERVICE_URL:http://localhost:8083}
 budget:
   service:
-    url: http://budget-service:8085
+    url: ${BUDGET_SERVICE_URL:http://localhost:8085}
 logging:
   level:
     com:
@@ -58,4 +58,4 @@ management:
       show-details: always
 subscription:
   service:
-    url: http://subscription-service:8090
+    url: ${SUBSCRIPTION_SERVICE_URL:http://localhost:8090}
