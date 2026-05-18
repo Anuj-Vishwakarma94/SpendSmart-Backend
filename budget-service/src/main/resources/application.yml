@@ -23,7 +23,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://admin-server:9090
+        url: ${ADMIN_SERVER_URL:http://localhost:9090}
         username: ${ADMIN_USERNAME}
         password: ${ADMIN_PASSWORD}
         instance:
@@ -55,4 +55,4 @@ management:
       show-details: always
 subscription:
   service:
-    url: http://subscription-service:8090
+    url: ${SUBSCRIPTION_SERVICE_URL:http://localhost:8090}
