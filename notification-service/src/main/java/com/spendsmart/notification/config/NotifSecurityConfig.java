@@ -52,8 +52,13 @@ public class NotifSecurityConfig {
 
     @Bean public CorsConfigurationSource cors() {
         CorsConfiguration c = new CorsConfiguration();
-        c.setAllowedOrigins(List.of("http://localhost:5173"));
-        c.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        c.setAllowedOrigins(List.of(
+            "http://localhost:5173",
+            "http://localhost:5174",
+            "http://127.0.0.1:5173",
+            "https://spendsmartpro.duckdns.org"
+        ));
+        c.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         c.setAllowedHeaders(List.of("*")); c.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource s = new UrlBasedCorsConfigurationSource();
         s.registerCorsConfiguration("/**", c); return s;
