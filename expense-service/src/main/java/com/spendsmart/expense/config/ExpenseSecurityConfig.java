@@ -46,9 +46,8 @@ public class ExpenseSecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/expenses/admin/all").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .requestMatchers("/actuator/**").permitAll().anyRequest().authenticated()
             )
             .addFilterBefore(expenseJwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
