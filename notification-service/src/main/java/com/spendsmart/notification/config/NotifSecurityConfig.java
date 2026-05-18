@@ -42,11 +42,10 @@ public class NotifSecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(a -> a
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/actuator/**").permitAll()
                 // Allow internal service calls (budget-alert, bulk) without user token
                 .requestMatchers("/api/notifications/budget-alert").permitAll()
                 .requestMatchers("/api/notifications/bulk").permitAll()
-                .anyRequest().authenticated())
+                .requestMatchers("/actuator/**").permitAll().anyRequest().authenticated())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
