@@ -48,8 +48,7 @@ public class IncomeSecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/actuator/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/actuator/**").permitAll().anyRequest().authenticated()
             )
             .addFilterBefore(incomeJwtFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(premiumCheckFilter, UsernamePasswordAuthenticationFilter.class);
