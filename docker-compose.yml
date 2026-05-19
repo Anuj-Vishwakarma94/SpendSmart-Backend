@@ -469,6 +469,8 @@ services:
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
       SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_payment?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -507,6 +509,8 @@ services:
       JAVA_TOOL_OPTIONS: "-Xms256m -Xmx256m"
       SPRING_BOOT_ADMIN_CLIENT_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/spendsmart_subscription?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       eureka-server:
         condition: service_healthy
