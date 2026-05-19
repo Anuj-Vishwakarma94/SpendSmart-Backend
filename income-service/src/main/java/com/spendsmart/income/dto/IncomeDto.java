@@ -41,6 +41,12 @@ public class IncomeDto {
          */
         private String recurrencePeriod;
 
+        /** Start date for recurring schedule (defaults to date if not provided) */
+        private LocalDate startDate;
+
+        /** Optional end date for the recurring schedule */
+        private LocalDate endDate;
+
         private String currency = "INR";
     }
 

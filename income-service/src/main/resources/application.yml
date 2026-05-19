@@ -55,3 +55,6 @@ management:
 subscription:
   service:
     url: ${SUBSCRIPTION_SERVICE_URL:http://localhost:8090}
+recurring:
+  service:
+    url: ${RECURRING_SERVICE_URL:http://localhost:8087}

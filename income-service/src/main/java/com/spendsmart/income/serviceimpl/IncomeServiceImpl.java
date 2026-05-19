@@ -5,18 +5,31 @@ import com.spendsmart.income.entity.Income;
 import com.spendsmart.income.repository.IncomeRepository;
 import com.spendsmart.income.service.IncomeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class IncomeServiceImpl implements IncomeService {
 
     private final IncomeRepository incomeRepository;
+
+    @Value("${recurring.service.url:http://localhost:8087}")
+    private String recurringServiceUrl;
 
     // ─── CRUD ─────────────────────────────────────────────
 
@@ -41,7 +54,19 @@ public class IncomeServiceImpl implements IncomeService {
                 .currency(request.getCurrency() != null ? request.getCurrency() : "INR")
                 .build();
 
-        return toResponse(incomeRepository.save(income));
+        Income saved = incomeRepository.save(income);
+
+        // If recurring, also create an entry in recurring-service
+        if (Boolean.TRUE.equals(request.getIsRecurring())) {
+            try {
+                createRecurringEntry(saved, request);
+            } catch (Exception e) {
+                log.error("Failed to create recurring entry for income {}: {}", saved.getIncomeId(), e.getMessage());
+                // Don't fail the income save — recurring entry creation is best-effort
+            }
+        }
+
+        return toResponse(saved);
     }
 
     @Override
@@ -204,6 +229,47 @@ public class IncomeServiceImpl implements IncomeService {
             throw new IllegalArgumentException("Invalid recurrencePeriod: " + period +
                     ". Valid values: DAILY, WEEKLY, MONTHLY, QUARTERLY, YEARLY");
         }
+    }
+
+    private void createRecurringEntry(Income saved, IncomeDto.CreateIncomeRequest request) {
+        // Retrieve Authorization header from current request context
+        String authHeader = null;
+        try {
+            ServletRequestAttributes attrs =
+                    (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attrs != null) {
+                authHeader = attrs.getRequest().getHeader("Authorization");
+            }
+        } catch (Exception e) {
+            log.warn("Could not extract Authorization header for recurring-service call");
+        }
+
+        LocalDate startDate = request.getStartDate() != null ? request.getStartDate() : request.getDate();
+        String endDateStr = request.getEndDate() != null
+                ? request.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+
+        // Build request body as a Map
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("title", saved.getTitle());
+        body.put("amount", saved.getAmount());
+        body.put("type", "INCOME");
+        body.put("frequency", saved.getRecurrencePeriod() != null
+                ? saved.getRecurrencePeriod().name() : request.getRecurrencePeriod().toUpperCase());
+        body.put("startDate", startDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        if (endDateStr != null) body.put("endDate", endDateStr);
+        if (saved.getCategoryId() != null) body.put("categoryId", saved.getCategoryId());
+        body.put("currency", saved.getCurrency());
+        body.put("description", saved.getNotes() != null ? saved.getNotes() : "");
+        body.put("paymentMethod", "CASH");
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        if (authHeader != null) headers.set("Authorization", authHeader);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+        restTemplate.postForEntity(recurringServiceUrl + "/api/recurring", entity, Object.class);
+        log.info("Created recurring entry in recurring-service for income {}", saved.getIncomeId());
     }
 
     private IncomeDto.IncomeResponse toResponse(Income income) {
