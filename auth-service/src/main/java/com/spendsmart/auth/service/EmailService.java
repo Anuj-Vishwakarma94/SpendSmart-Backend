@@ -53,12 +53,8 @@ public class EmailService {
                     "<tr><td style='padding:6px 12px;color:#777;'>Time</td>" +
                     "<td style='padding:6px 12px;font-weight:bold;'>" + time + "</td></tr>" +
                     "</table>" +
-                    "<p style='margin-top:20px;'>If this was <strong>you</strong>, no action is needed.</p>" +
-                    "<p>If you <strong>did not</strong> sign in, please secure your account immediately:</p>" +
-                    "<div style='text-align:center;margin:24px 0;'>" +
-                    "<a href='" + frontendUrl + "/forgot-password' " +
-                    "style='background:#e53935;color:#fff;padding:12px 28px;border-radius:6px;" +
-                    "text-decoration:none;font-weight:bold;font-size:15px;'>Reset My Password</a></div>" +
+                    "<p style='margin-top:20px;'>If this was <strong>you</strong>, no action is needed — you're all set!</p>" +
+                    "<p style='color:#777;font-size:13px;'>If you did not sign in, please contact us immediately at " + fromEmail + ".</p>" +
                     "</div>" +
                     "<div style='padding:16px 32px;background:#f9f9f9;border-top:1px solid #eee;" +
                     "font-size:12px;color:#999;text-align:center;'>" +
