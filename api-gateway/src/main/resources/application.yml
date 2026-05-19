@@ -15,6 +15,7 @@ spring:
   cloud:
     gateway:
       globalcors:
+        add-to-simple-url-handler-mapping: true
         cors-configurations:
           '[/**]':
             allowedOrigins:
@@ -30,11 +31,7 @@ spring:
               - OPTIONS
               - PATCH
             allowedHeaders:
-              - "Authorization"
-              - "Content-Type"
-              - "Accept"
-              - "X-Requested-With"
-              - "Origin"
+              - "*"
             allowCredentials: true
             maxAge: 3600
       discovery:
